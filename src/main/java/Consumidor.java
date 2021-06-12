@@ -12,18 +12,16 @@ public class Consumidor implements Runnable{
         while (true){
             synchronized (itens){
                 while (itens.isEmpty()){
-                    System.out.println ("lista ainda esta vazia...");
                     try {
-                        Thread.sleep(3000);
+                        itens.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-                int item = itens.get(0);
-                total += item;
+                total += itens.get(0);
                 itens.remove(0);
-                System.out.println("Consumido: " +  item);
-                System.out.println("Total: " + total);
+                itens.notify();
+                System.out.printf ("Total consumido:(%s) %d\n", Thread.currentThread().getName(), total);
             }
             try {
                 Thread.sleep(2000);
